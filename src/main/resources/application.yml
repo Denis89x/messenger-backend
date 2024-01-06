@@ -10,6 +10,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+  servlet:
+    multipart:
+      max-file-size: 5MB
 jwt:
   secret: ${JWT_SECRET}
+application:
+  key:
+    id: ${B2_KEY_ID}
+    value: ${B2_VALUE}
+bucket:
+  id: ${B2_BUCKET_ID}
