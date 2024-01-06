@@ -1,0 +1,14 @@
+package dev.lebenkov.messenger.api.service;
+
+import dev.lebenkov.messenger.storage.dto.AccountResponse;
+import dev.lebenkov.messenger.storage.model.Account;
+
+public interface AccountService {
+    AccountResponse fetchAccountResponse();
+
+    Account fetchAccount();
+
+    void saveAccount(Account account);
+
+    void uploadProfilePicture(String pictureLink);
+}

@@ -38,3 +38,6 @@ out/
 
 ### ENV Files ###
 .env
+
+### Private files ###
+privacy.md
