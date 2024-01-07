@@ -1,19 +1,20 @@
 package dev.lebenkov.messenger.api.controller;
 
 import dev.lebenkov.messenger.api.service.AccountService;
-import dev.lebenkov.messenger.api.service.AccountServiceImp;
 import dev.lebenkov.messenger.api.service.PictureService;
-import dev.lebenkov.messenger.api.util.validation.UploadPictureValidator;
 import dev.lebenkov.messenger.storage.dto.AccountResponse;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -25,8 +26,6 @@ public class SettingsController {
     AccountService accountService;
     PictureService pictureService;
 
-    UploadPictureValidator uploadPictureValidator;
-
     @GetMapping
     public ResponseEntity<AccountResponse> fetchAccount() {
         return new ResponseEntity<>(accountService.fetchAccountResponse(), HttpStatus.OK);
@@ -36,13 +35,31 @@ public class SettingsController {
     public ResponseEntity<String> uploadProfilePicture(
             @RequestParam("picture") MultipartFile picture) {
 
-/*        uploadPictureValidator.validate(picture, bindingResult);
+        accountService.updateProfilePicture(pictureService.uploadProfilePicture(picture));
+        return ResponseEntity.noContent().build();
+    }
 
-        log.info("Here");
-        if (bindingResult.hasErrors())
-            return new ResponseEntity<>(bindingResult.getFieldError().toString(), HttpStatus.BAD_REQUEST);*/
+    @PatchMapping("/username/{username}")
+    public ResponseEntity<String> updateUsername(@PathVariable Optional<String> username) {
+        return new ResponseEntity<>(accountService.updateUsername(username.orElseThrow(() ->
+                new RuntimeException("Username is null!"))), HttpStatus.OK);
+    }
 
-        accountService.uploadProfilePicture(pictureService.uploadProfilePicture(picture));
-        return new ResponseEntity<>("Profile picture successfully uploaded!", HttpStatus.OK);
+    @PatchMapping("/firstname/{firstname}")
+    public ResponseEntity<String> updateFirstName(@PathVariable("firstname")
+                                                  @Size(min = 3, max = 15, message = "Длина имени должна быть от 3 до 15 символов")
+                                                  @Pattern(regexp = "^[a-zA-Z]+$", message = "Имя может содержать только буквы")
+                                                  String firstName) {
+        accountService.updateFirstName(firstName);
+        return new ResponseEntity<>("Firstname changed successfully!", HttpStatus.OK);
+    }
+
+    @PatchMapping("/lastname/{lastname}")
+    public ResponseEntity<String> updateSecondName(@PathVariable("lastname")
+                                                   @Size(min = 3, max = 20, message = "Длина фамилия должна быть от 3 до 20 символов")
+                                                   @Pattern(regexp = "^[a-zA-Z]+$", message = "Фамилия может содержать только буквы")
+                                                   String lastName) {
+        accountService.updateLastName(lastName);
+        return new ResponseEntity<>("Lastname changed successfully!", HttpStatus.OK);
     }
 }

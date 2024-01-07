@@ -15,23 +15,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AccountServiceImp implements AccountService {
-
-    AccountRepository accountRepository;
+public class AccountRetrievalServiceImp implements AccountRetrievalService {
 
     ModelMapper modelMapper;
+    AccountRepository accountRepository;
 
     @Override
-    public void saveAccount(Account account) {
-        accountRepository.save(account);
-        log.info("The account has been saved with name {}", account.getUsername());
-    }
-
-    @Override
-    public void uploadProfilePicture(String pictureLink) {
-        Account account = fetchAccount();
-        account.setProfilePicture(pictureLink);
-        accountRepository.save(account);
+    public boolean doesAccountExistByUsername(String username) {
+        return accountRepository.findByUsername(username).isPresent();
     }
 
     @Override
