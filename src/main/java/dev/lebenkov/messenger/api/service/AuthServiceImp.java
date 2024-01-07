@@ -33,8 +33,11 @@ public class AuthServiceImp implements AuthService {
     @Override
     public Map<String, String> register(AccountRequestRegistration accountRequestRegistration) {
         Account account = convertToAccount(accountRequestRegistration);
+
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setRole("ROLE_USER");
+        account.setIsVerifiedEmail(false);
+
         accountRepository.save(account);
 
         return Map.of("jwt-token", jwtUtil.generateToken(account.getUsername()));
