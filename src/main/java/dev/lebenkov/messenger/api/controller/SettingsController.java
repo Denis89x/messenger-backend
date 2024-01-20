@@ -1,8 +1,12 @@
 package dev.lebenkov.messenger.api.controller;
 
 import dev.lebenkov.messenger.api.service.AccountService;
+import dev.lebenkov.messenger.api.service.EmailService;
 import dev.lebenkov.messenger.api.service.PictureService;
+import dev.lebenkov.messenger.api.util.exception.IncorrectPasswordException;
 import dev.lebenkov.messenger.storage.dto.AccountResponse;
+import dev.lebenkov.messenger.storage.dto.AccountUpdatePassword;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -25,6 +29,7 @@ public class SettingsController {
 
     AccountService accountService;
     PictureService pictureService;
+    EmailService emailService;
 
     @GetMapping
     public ResponseEntity<AccountResponse> fetchAccount() {
@@ -61,5 +66,21 @@ public class SettingsController {
                                                    String lastName) {
         accountService.updateLastName(lastName);
         return new ResponseEntity<>("Lastname changed successfully!", HttpStatus.OK);
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<String> updatePassword(@RequestBody @Valid AccountUpdatePassword accountUpdatePassword) {
+        try {
+            accountService.updatePassword(accountUpdatePassword);
+            return new ResponseEntity<>("Password changed successfully!", HttpStatus.OK);
+        } catch (IncorrectPasswordException e) {
+            return new ResponseEntity<>("Incorrect current password!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/send-email-code")
+    public ResponseEntity<String> sendEmailCode() {
+         emailService.sendEmailCode();
+         return new ResponseEntity<>("Email code was successfully sent!", HttpStatus.OK);
     }
 }
