@@ -1,38 +1,18 @@
 package dev.lebenkov.messenger.api.service;
 
 import dev.lebenkov.messenger.storage.dto.AccountResponse;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import dev.lebenkov.messenger.storage.dto.AccountUpdatePassword;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AccountService {
+public interface AccountService {
+    AccountResponse fetchAccountResponse();
 
-    AccountModificationService accountModificationService;
-    AccountRetrievalService accountRetrievalService;
+    String updateUsername(String username);
 
-    public AccountResponse fetchAccountResponse() {
-        return accountRetrievalService.fetchAccountResponse();
-    }
+    void updateFirstName(String firstName);
 
-    public String updateUsername(String username) {
-        return accountModificationService.updateUsername(username);
-    }
+    void updateProfilePicture(String pictureLink);
 
-    public void updateFirstName(String firstName) {
-        accountModificationService.updateFirstName(firstName);
-    }
+    void updateLastName(String lastName);
 
-    public void updateProfilePicture(String pictureLink) {
-        accountModificationService.updateProfilePicture(pictureLink);
-    }
-
-    public void updateLastName(String lastName) {
-        accountModificationService.updateLastName(lastName);
-    }
+    void updatePassword(AccountUpdatePassword accountUpdatePassword);
 }
