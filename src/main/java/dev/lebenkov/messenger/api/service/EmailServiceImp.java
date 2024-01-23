@@ -21,7 +21,6 @@ public class EmailServiceImp implements EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Deprecated
     private final AccountRepository accountRepository;
 
     private final EmailCodeGenerator emailCodeGenerator;
@@ -65,5 +64,12 @@ public class EmailServiceImp implements EmailService {
             account.setIsVerifiedEmail(true);
             accountRepository.save(account);
         }
+    }
+
+    @Override
+    public void unlinkEmail() {
+        Account account = accountRetrievalService.fetchAccount();
+        account.setIsVerifiedEmail(false);
+        accountRepository.save(account);
     }
 }
