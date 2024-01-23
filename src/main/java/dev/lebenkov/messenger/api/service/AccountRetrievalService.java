@@ -6,5 +6,4 @@ import dev.lebenkov.messenger.storage.model.Account;
 public interface AccountRetrievalService {
     AccountResponse fetchAccountResponse();
     Account fetchAccount();
-    boolean doesAccountExistByUsername(String username);
 }

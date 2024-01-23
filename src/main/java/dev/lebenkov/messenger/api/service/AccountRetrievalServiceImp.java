@@ -21,11 +21,6 @@ public class AccountRetrievalServiceImp implements AccountRetrievalService {
     AccountRepository accountRepository;
 
     @Override
-    public boolean doesAccountExistByUsername(String username) {
-        return accountRepository.findByUsername(username).isPresent();
-    }
-
-    @Override
     public AccountResponse fetchAccountResponse() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return convertToAccountResponse(accountRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Account not founded!")));
