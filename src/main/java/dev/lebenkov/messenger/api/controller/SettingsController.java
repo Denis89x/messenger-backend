@@ -83,4 +83,10 @@ public class SettingsController {
          emailService.sendEmailCode();
          return new ResponseEntity<>("Email code was successfully sent!", HttpStatus.OK);
     }
+
+    @PostMapping("/verify-email/{code}")
+    public ResponseEntity<String> verifyEmail(@PathVariable String code) {
+        emailService.verifyEmail(code);
+        return new ResponseEntity<>("Email was successfully verified!", HttpStatus.OK);
+    }
 }
